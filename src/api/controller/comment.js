@@ -1,4 +1,6 @@
 const Base = require('./base.js');
+//评论控制器，用于处理与评论相关的请求。
+
 
 module.exports = class extends Base {
   /**
@@ -12,6 +14,12 @@ module.exports = class extends Base {
    * @returns {Promise.<*|PreventPromise|void|Promise>}
    */
   async postAction() {
+    /**
+     * postAction方法用于发表评论。
+     * 它从请求中获取typeId、valueId和content，将content转换为base64编码，并将这些值插入到数据库中。
+     * 如果插入成功，返回“评论添加成功”，否则返回“评论保存失败”。
+     * 
+     */
     const typeId = this.post('typeId');
     const valueId = this.post('valueId');
     const content = this.post('content');
@@ -32,6 +40,11 @@ module.exports = class extends Base {
   }
 
   async countAction() {
+    /**
+     * countAction方法用于获取评论数量。
+     * 它从请求中获取typeId和valueId，并使用这些值从数据库中获取所有评论数量和包含图片的评论数量。
+     * 然后将这些值作为对象返回。
+     */
     const typeId = this.get('typeId');
     const valueId = this.get('valueId');
 
@@ -52,6 +65,12 @@ module.exports = class extends Base {
   }
 
   async listAction() {
+    /**
+     * listAction方法用于获取评论列表。
+     * 它从请求中获取typeId、valueId、showType、page和size。如果showType不等于1，则从数据库中获取所有评论，并将其分页。
+     * 否则，获取包含图片的评论，并将其分页。
+     * 然后将评论列表返回，其中每个评论都包含评论内容、类型ID、值ID、评论ID、添加时间、用户信息和图片列表。
+     */
     const typeId = this.get('typeId');
     const valueId = this.get('valueId');
     const showType = this.get('showType'); // 选择评论的类型 0 全部， 1 只显示图片

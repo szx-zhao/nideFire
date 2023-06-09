@@ -1,6 +1,13 @@
 module.exports = class extends think.Model {
+
+
+
+
   /**
    * 获取商品的product
+   * 
+   * getProductList方法接受一个goodsId参数
+   * 然后使用this.model('product')查询数据库中goods_id等于goodsId的所有商品，并返回结果。
    * @param goodsId
    * @returns {Promise.<*>}
    */
@@ -11,6 +18,10 @@ module.exports = class extends think.Model {
 
   /**
    * 获取商品的规格信息
+   * 
+   * getSpecificationList方法也接受一个goodsId参数
+   * 然后使用this.model('goods_specification')查询数据库中goods_id等于goodsId的所有商品规格信息。
+   * 查询结果包括规格信息和规格名称，然后按照规格名称分组，将相同规格名称的规格信息放在同一个数组中，最后返回规格信息的数组。
    * @param goodsId
    * @returns {Promise.<Array>}
    */

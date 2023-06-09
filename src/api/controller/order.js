@@ -1,9 +1,13 @@
 const Base = require('./base.js');
 const moment = require('moment');
+//订单控制器
+
 
 module.exports = class extends Base {
   /**
    * 获取订单列表
+   * 
+   * 查询数据库中当前用户的订单信息，并将订单商品、订单状态和可操作选项等信息添加到订单列表中，最后返回订单列表。
    * @return {Promise} []
    */
   async listAction() {
@@ -30,6 +34,11 @@ module.exports = class extends Base {
     return this.success(orderList);
   }
 
+
+  /**
+   * 订单详情方法
+   * 查询数据库中指定订单的详细信息，并将省市区信息、物流信息、订单商品、订单状态和可操作选项等信息添加到订单详情中，最后返回订单详情
+   */
   async detailAction() {
     const orderId = this.get('orderId');
     const orderInfo = await this.model('order').where({ user_id: this.getLoginUserId(), id: orderId }).find();
@@ -73,6 +82,9 @@ module.exports = class extends Base {
 
   /**
    * 提交订单
+   * 
+   * 获取用户选择的收货地址、购买的商品等信息，
+   * 并计算订单总价和实际支付金额，然后将订单信息和订单商品信息插入到数据库中，最后返回订单信息
    * @returns {Promise.<void>}
    */
   async submitAction() {
@@ -167,6 +179,10 @@ module.exports = class extends Base {
 
   /**
    * 查询物流信息
+   * 
+   * 首先，它从请求参数中获取订单ID，如果订单ID为空，则返回一个失败的响应，提示订单不存在。
+   * 否则，它调用order_express模型的getLatestOrderExpress方法，传入订单ID作为参数，以获取最新的物流信息。
+   * 最后，它返回一个成功的响应，包含最新的物流信息。 
    * @returns {Promise.<void>}
    */
   async expressAction() {

@@ -1,7 +1,14 @@
 const Base = require('./base.js');
+// 商品控制器，包含了多个方法
+
 
 module.exports = class extends Base {
   async indexAction() {
+    /**
+     * 获取所有商品列表
+     * 
+     * 通过调用model('goods')的select方法获取所有商品信息，然后返回成功信息和商品列表。
+     */
     const model = this.model('goods');
     const goodsList = await model.select();
 
@@ -10,7 +17,10 @@ module.exports = class extends Base {
 
   /**
    * 获取sku信息，用于购物车编辑时选择规格
+   * 
+   * 通过传入商品id，调用model('goods')的getSpecificationList和getProductList方法获取商品的规格和产品信息，然后返回成功信息和规格和产品列表。
    * @returns {Promise.<Promise|PreventPromise|void>}
+   * 注释表明函数返回一个Promise,这个Promise可能(最终)解析为几种类型的值。Promise 对象代表一个异步操作
    */
   async skuAction() {
     const goodsId = this.get('id');
@@ -24,6 +34,10 @@ module.exports = class extends Base {
 
   /**
    * 商品详情页数据
+   * 
+   * 通过传入商品id，调用model('goods')的where方法获取商品信息，
+   * 调用model('goods_gallery')、model('goods_attribute')、model('goods_issue')、model('brand')、model('comment')、model('user')和model('comment_picture')等方法
+   * 取商品的图片、属性、问题、品牌、评论、用户和评论图片等信息，然后返回成功信息和商品详情页数据。
    * @returns {Promise.<Promise|PreventPromise|void>}
    */
   async detailAction() {
@@ -76,6 +90,10 @@ module.exports = class extends Base {
 
   /**
    * 获取分类下的商品
+   * 
+   * 通过传入分类id，调用model('category')的where方法获取当前分类信息，
+   * 调用model('category')的where方法获取当前分类的父分类信息，
+   * 调用model('category')的where方法获取当前分类的兄弟分类信息，然后返回成功信息和分类信息。
    * @returns {Promise.<*>}
    */
   async categoryAction() {
@@ -93,6 +111,10 @@ module.exports = class extends Base {
 
   /**
    * 获取商品列表
+   * 
+   * 通过传入分类id、品牌id、关键字、是否新品、是否热销、页码、每页数量、排序方式和排序顺序等参数，
+   * 调用model('goods')的where方法获取符合条件的商品信息，调用model('search_history')的add方法添加搜索历史，
+   * 调用model('category')的getCategoryWhereIn方法获取符合条件的分类id，然后返回成功信息和商品列表。 
    * @returns {Promise.<*>}
    */
   async listAction() {
@@ -182,6 +204,8 @@ module.exports = class extends Base {
 
   /**
    * 商品列表筛选的分类列表
+   * 
+   * 该函数的作用是根据传入的筛选条件，从数据库中获取商品信息，并返回筛选后的商品分类信息。
    * @returns {Promise.<Promise|void|PreventPromise>}
    */
   async filterAction() {
@@ -237,8 +261,8 @@ module.exports = class extends Base {
     return this.success({
       bannerInfo: {
         url: '',
-        name: '坚持初心，为你寻觅世间好物',
-        img_url: 'http://yanxuan.nosdn.127.net/8976116db321744084774643a933c5ce.png'
+        name: '坚持初心',
+        img_url: 'https://www.119.gov.cn/images/kp/hzyf/gcjz/2022/11/03/1667447176510064937.png'
       }
     });
   }
@@ -251,14 +275,20 @@ module.exports = class extends Base {
     return this.success({
       bannerInfo: {
         url: '',
-        name: '大家都在买的严选好物',
-        img_url: 'http://yanxuan.nosdn.127.net/8976116db321744084774643a933c5ce.png'
+        name: '安全靠大家',
+        img_url: 'https://www.119.gov.cn/images/kp/hzyf/gcjz/2022/11/03/1667447176510064937.png'
       }
     });
   }
 
   /**
    * 商品详情页的大家都在看的商品
+   * 
+   * 首先获取当前商品的 id，然后在 related_goods 表中查找与该商品关联的商品的 id，
+   * 然后在 related_goods 表中查找与该商品关联的商品的 id，
+   * 如果没有关联商品，则在同一分类下随机选择 8 个商品作为“大家都在看”的商品；
+   * 如果有关联商品，则直接获取这些商品的信息。最后将商品列表返回给前端。
+   * 
    * @returns {Promise.<Promise|PreventPromise|void>}
    */
   async relatedAction() {

@@ -1,6 +1,8 @@
 module.exports = class extends think.Model {
   /**
    * 获取购物车的商品
+   * 
+   * 返回购物车中的商品列表
    * @returns {Promise.<*>}
    */
   async getGoodsList(userId) {
@@ -10,6 +12,8 @@ module.exports = class extends think.Model {
 
   /**
    * 获取购物车的选中的商品
+   * 
+   * 返回购物车中选中的商品列表
    * @returns {Promise.<*>}
    */
   async getCheckedGoodsList(userId) {
@@ -19,6 +23,8 @@ module.exports = class extends think.Model {
 
   /**
    * 清空已购买的商品
+   * 
+   * 清空购物车中已购买的商品
    * @returns {Promise.<*>}
    */
   async clearBuyGoods(userId) {

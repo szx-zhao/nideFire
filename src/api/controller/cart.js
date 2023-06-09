@@ -1,13 +1,15 @@
 const Base = require('./base.js');
+//选购意向控制器，包含了获取选购意向信息、添加商品到选购意向、更新选购意向商品数量等功能。
+//都是异步函数，使用了async/await语法。 
 
 module.exports = class extends Base {
   /**
-   * 获取购物车中的数据
+   * 获取选购意向中的数据
    * @returns {Promise.<{cartList: *, cartTotal: {goodsCount: number, goodsAmount: number, checkedGoodsCount: number, checkedGoodsAmount: number}}>}
    */
   async getCart() {
     const cartList = await this.model('cart').where({user_id: this.getLoginUserId(), session_id: 1}).select();
-    // 获取购物车统计信息
+    // 获取选购意向统计信息，包括选购意向列表和统计信息
     let goodsCount = 0;
     let goodsAmount = 0.00;
     let checkedGoodsCount = 0;
@@ -36,15 +38,16 @@ module.exports = class extends Base {
   }
 
   /**
-   * 获取购物车信息，所有对购物车的增删改操作，都要重新返回购物车的信息
+   * 获取选购意向信息，所有对选购意向的增删改操作，都要重新返回选购意向的信息
    * @return {Promise} []
    */
   async indexAction() {
+    //获取选购意向信息并返回给前端；
     return this.success(await this.getCart());
   }
 
   /**
-   * 添加商品到购物车
+   * 添加商品到选购意向，用于将商品添加到选购意向中，需要判断商品是否可以购买、规格库存是否足够以及选购意向中是否已经存在该商品等；
    * @returns {Promise.<*>}
    */
   async addAction() {
@@ -64,7 +67,7 @@ module.exports = class extends Base {
       return this.fail(400, '库存不足');
     }
 
-    // 判断购物车中是否存在此规格商品
+    // 判断选购意向中是否存在此规格商品
     const cartInfo = await this.model('cart').where({goods_id: goodsId, product_id: productId}).find();
     if (think.isEmpty(cartInfo)) {
       // 添加操作
@@ -78,7 +81,7 @@ module.exports = class extends Base {
         }).getField('value');
       }
 
-      // 添加到购物车
+      // 添加到选购意向
       const cartData = {
         goods_id: goodsId,
         product_id: productId,
@@ -97,7 +100,7 @@ module.exports = class extends Base {
 
       await this.model('cart').thenAdd(cartData, {product_id: productId});
     } else {
-      // 如果已经存在购物车中，则数量增加
+      // 如果已经存在选购意向中，则数量增加
       if (productInfo.goods_number < (number + cartInfo.number)) {
         return this.fail(400, '库存不足');
       }
@@ -111,7 +114,10 @@ module.exports = class extends Base {
     return this.success(await this.getCart());
   }
 
-  // 更新指定的购物车信息
+  /**更新指定的选购意向信息
+   * 更新选购意向中指定商品的数量，需要判断商品库存是否足够以及选购意向中是否已经存在该商品等。
+   * 
+   */ 
   async updateAction() {
     const goodsId = this.post('goodsId');
     const productId = this.post('productId'); // 新的product_id
@@ -124,7 +130,7 @@ module.exports = class extends Base {
       return this.fail(400, '库存不足');
     }
 
-    // 判断是否已经存在product_id购物车商品
+    // 判断是否已经存在product_id选购意向商品
     const cartInfo = await this.model('cart').where({id: id}).find();
     // 只是更新number
     if (cartInfo.product_id === productId) {
@@ -160,7 +166,7 @@ module.exports = class extends Base {
 
       await this.model('cart').where({id: id}).update(cartData);
     } else {
-      // 合并购物车已有的product信息，删除已有的数据
+      // 合并选购意向已有的product信息，删除已有的数据
       const newNumber = number + newCartInfo.number;
 
       if (think.isEmpty(productInfo) || productInfo.goods_number < newNumber) {
@@ -200,7 +206,7 @@ module.exports = class extends Base {
     return this.success(await this.getCart());
   }
 
-  // 删除选中的购物车商品，批量删除
+  // 删除选中的选购意向商品，批量删除
   async deleteAction() {
     let productId = this.post('productIds');
     if (!think.isString(productId)) {
@@ -214,7 +220,7 @@ module.exports = class extends Base {
     return this.success(await this.getCart());
   }
 
-  // 获取购物车商品的总件件数
+  // 获取选购意向商品的总件件数
   async goodscountAction() {
     const cartData = await this.getCart();
     return this.success({

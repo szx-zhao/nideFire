@@ -1,8 +1,15 @@
 const Base = require('./base.js');
 
+//控制器模块的 地址控制器，包含了获取用户收货地址列表、获取收货地址详情、添加或更新收货地址、删除指定收货地址等功能。
+
 module.exports = class extends Base {
   /**
    * 获取用户的收货地址
+   * listAction函数通过查询数据库获取用户的收货地址列表，并通过循环遍历每个地址，获取对应的省、市、区名称，并将它们拼接成完整的地址信息。
+   * itemKey变量用于跟踪addressList数组中的当前索引
+   * 
+   * this.model('address')和this.model('region')都是在thinkjs框架中定义的模型对象，用于操作数据库
+   * 
    * @return {Promise} []
    */
   async listAction() {
@@ -21,6 +28,7 @@ module.exports = class extends Base {
 
   /**
    * 获取收货地址的详情
+   * detailAction函数通过地址id查询数据库获取对应的收货地址详情，并同样获取对应的省、市、区名称，最后将它们拼接成完整的地址信息。
    * @return {Promise} []
    */
   async detailAction() {
@@ -39,6 +47,7 @@ module.exports = class extends Base {
 
   /**
    * 添加或更新收货地址
+   * 根据传入的参数判断是添加还是更新，然后将数据存入数据库中。如果设置了默认地址，则将其它地址的默认状态取消。deleteAction函数用于删除指定的收货地址。 
    * @returns {Promise.<Promise|PreventPromise|void>}
    */
   async saveAction() {

@@ -1,8 +1,12 @@
 const _ = require('lodash');
+//该类提供了一些方法来处理地区信息。
+
 
 module.exports = class extends think.Model {
   /**
    * 获取完整的省市区名称组成的字符串
+   * 
+   * getFullRegionName方法接受省、市、区的id作为参数，返回一个完整的省市区名称组成的字符串。
    * @param provinceId
    * @param cityId
    * @param districtId
@@ -53,6 +57,8 @@ module.exports = class extends think.Model {
 
   /**
    * 获取区域的名称
+   * 
+   * 接受地区id作为参数，返回该地区的名称
    * @param regionId
    * @returns {Promise.<*>}
    */
@@ -62,6 +68,8 @@ module.exports = class extends think.Model {
 
   /**
    * 获取下级的地区列表
+   * 
+   * 接受父级地区id作为参数，返回该父级地区的下级地区列表。
    * @param parentId
    * @returns {Promise.<*>}
    */
@@ -71,6 +79,8 @@ module.exports = class extends think.Model {
 
   /**
    * 获取区域的信息
+   * 
+   * 接受地区id作为参数，返回该地区的信息。这些方法都是异步的，返回一个Promise对象。 
    * @param regionId
    * @returns {Promise.<*>}
    */
